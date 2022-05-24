@@ -36,8 +36,7 @@ class player(pygame.sprite.Sprite):
 
         #kolizje
         self.image = pygame.Surface((30, 50))
-        self.rect = self.image.get_rect(topleft = (self.x + 15, self.y + 15))
-        self.image.fill('red')
+        self.rect = self.image.get_rect(topleft = (self.x + 25, self.y + 15))
         self.direction = pygame.math.Vector2(0, 0)
         self.gravity = 1
         self.jump_speed = -16
@@ -143,34 +142,3 @@ class player(pygame.sprite.Sprite):
         if keys[pygame.K_UP] and self.onGround == True:
             self.onGround = False
             self.jump()
-        # mechanizm skakania
-        """
-        if not (self.isJump):
-            if keys[pygame.K_UP]:
-                self.right_before = self.right
-                if self.right_before == True:
-                    self.facing = 1
-                left_before = self.left
-                if left_before == True:
-                    self.facing = -1
-                self.isJump = True
-                self.check_right = self.right
-                self.right = False
-                self.left = False
-                self.walkCount = 0
-
-
-        else:
-            if self.jumpCount >= -9 and self.y <= 405:
-                neg = 1
-                if self.jumpCount < 0:
-                    neg = -1
-                if self.y <= 405:
-                    self.y -= (self.jumpCount ** 2) * 0.5 * neg
-                    self.stopay -= (self.jumpCount ** 2) * 0.5 * neg
-                else:
-                    self.y = 405
-                self.jumpCount -= 1
-            else:
-                self.isJump = False
-                self.jumpCount = 9"""

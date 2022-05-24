@@ -62,7 +62,6 @@ def redrawWindow():
     player1.rect.x = player1.x
     player1.rect.y = player1.y
     #print(player1.rect)
-    print("jumpCount: ", player1.jumpCount, " isJump:", player1.isJump)
     level.horizontal_movement_collision(player1)
     player1.x = player1.rect.x
     level.vertical_movement_collision(player1)
@@ -75,11 +74,7 @@ def redrawWindow():
         e.draw(win)
         e.shoot()
         e.when_shoot()
-    platImg(350, 360)
-    platImg(390, 360)
     serca(30, 23)
-    for platform in platforms:
-        platform.draw(win)
     for bullet in bullets:
         bullet.draw(win)
     for bullet in bullets_enemy:
@@ -93,27 +88,15 @@ def redrawWindow():
 
     pygame.display.update()
 
-#---platformy-------------------------
-platforms = [
-    #krotka
-    #platform(350, 360, 160, 16, (13, 2, 18)),
-    #dluga
-    #platform(100, 260, 380, 16, (13, 2, 18))
 
-
-]
-
-#platform1_rect = pygame.Rect(350, 360, 160, 16)
-plat1 = plat.get_rect()
-plat2 = plat.get_rect()
 #---gracz-----------------------------
 player1 = player(300, 405, 64, 64)
 #--przeciwnicy------------------------
 bullets_enemy = []
 
 przeciwnicy = [
-     enemy(100, 209, 64, 64, 450, bullets_enemy, player1),
-     enemy(350, 405, 64, 64, 450, bullets_enemy, player1)
+     enemy(20, 209, 64, 64, 120, bullets_enemy, player1),
+     enemy(350, 305, 64, 64, 450, bullets_enemy, player1)
 ]
 
 
@@ -159,7 +142,7 @@ while run:
     clock.tick(27)
     seconds = (pygame.time.get_ticks() - start_ticks) / 1000
     #print("Run: ", run)
-    print("Monety:", monetyZebrane)
+    #print("Monety:", monetyZebrane)
 
     #----Zbieranie monet -----
     player_rect = pygame.Rect(player1.x, player1.y, player1.width, player1.height)
@@ -178,6 +161,9 @@ while run:
         deadscreen = True
         run = False
 
+    #jeśli wypadniemy poza mape
+    if player1.y > 500:
+        player1.hit()
 
     for event in pygame.event.get():
         #zamkniecie programu x'em

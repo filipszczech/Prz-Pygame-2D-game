@@ -92,6 +92,24 @@ class Tile(pygame.sprite.Sprite):
         self.image = pygame.Surface((size,size))
         self.image.fill('grey')
         self.rect = self.image.get_rect(topleft = pos)
+        self.img = pygame.image.load("img\platform_cp.png")
 
     def update(self, x_shift):
         self.rect.x += x_shift
+
+    def draw(self, win, x, y):
+        win.blit(self.img, (x, y))
+
+class Kolce(pygame.sprite.Sprite):
+    def __init__(self, pos, size):
+        super().__init__()
+        self.image = pygame.Surface((size,size))
+        self.image.fill('grey')
+        self.rect = self.image.get_rect(topleft = pos)
+        self.img = pygame.image.load("img\lava.png")
+
+    def update(self, x_shift):
+        self.rect.x += x_shift
+
+    def draw(self, win, x, y):
+        win.blit(self.img, (x, y))

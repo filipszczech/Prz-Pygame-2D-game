@@ -1,23 +1,24 @@
 import pygame
-from objects import Tile
+from objects import Tile, Kolce
 from player import player
 
 level_map = [
 '                               ',
 '                               ',
+'                          M    ',
+'       XXX               XX    ',
 '                               ',
-' XX    XXX               XX    ',
-' XX                            ',
-' XXXX            XX         XX ',
-' XXXX          XX              ',
-' XX    X     XXXX    XX  XX    ',
-'       X     XXXX    XX  XXX   ',
-'    XXXX     XXXXXX  XX  XXXX  ',
-'XXXXXXXX     XXXXXX  XX  XXXX  ',
-'XXXXXXXXX    XXXXXX  XX  XXXX  ',
-'XXXXXXXXX    XXXXXX  XX  XXXX  ',
-'XXXXXXXXX    XXXXXX  XX  XXXX  ',
-'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX']
+'XXX              XX         XX ',
+'                               ',
+'             XXXX              ',
+' XXXX                    XXX   ',
+'                               ',
+'                               ',
+'XXXXXXX    XXXXXXXX      XXXX  ',
+'                               ',
+'                               ',
+'    XXXXXXXXXXXXXYYYX   XX   XX',
+'    XXXXXXXXXXXXXXXXX   XXYYYXX']
 
 tile_size = 32
 screen_width = 1200
@@ -31,9 +32,11 @@ class Level:
         self.setup_level(level_map)
         self.world_shift = 0
         self.current_x = 0
+        self.delay = 27
 
     def setup_level(self, layout):
         self.tiles = pygame.sprite.Group()
+        self.kolce = pygame.sprite.Group()
 
         for row_index, row in enumerate(layout):
             for col_index, cell in enumerate(row):
@@ -43,9 +46,13 @@ class Level:
                 if cell == 'X':
                     tile = Tile((x, y), tile_size)
                     self.tiles.add(tile)
-                #if cell == 'P':
-                #    player_sprite = player((x, y))
-                #    self.player.add(player_sprite)
+                    tile.draw(self.display_surface, x, y)
+
+                if cell == 'Y':
+                    kolec = Kolce((x, y), tile_size)
+                    self.kolce.add(kolec)
+                    kolec.draw(self.display_surface, x, y)
+
     """
     def scroll_x(self):
         player = self.player.sprite
@@ -69,7 +76,6 @@ class Level:
             if sprite.rect.colliderect(player.rect):
                 if player.left:
                     player.rect.left = sprite.rect.right
-                    print("KOLIZJA")
                 elif player.left == False:
                     player.rect.right = sprite.rect.left
 
@@ -88,8 +94,30 @@ class Level:
                     player.y = player.rect.top  + 64
                     player.direction.y = 0
 
+        for sprite in self.kolce.sprites():
+            if sprite.rect.colliderect(player.rect):
+                if player.direction.y > 0:
+                    player.rect.bottom = sprite.rect.top
+                    player.direction.y = 0
+                    player.y = player.rect.bottom
+                    player.onGround = True
+                    self.hit(player)
     def run(self):
 
         # level tiles
         self.tiles.update(self.world_shift)
-        self.tiles.draw(self.display_surface)
+        #self.tiles.draw(self.display_surface)
+        for tile in self.tiles:
+            tile.draw(self.display_surface, tile.rect.x, tile.rect.y)
+
+        for kolec in self.kolce:
+            kolec.draw(self.display_surface, kolec.rect.x, kolec.rect.y)
+        pygame.display.update()
+
+    #obrażenia od lawy
+    def hit(self, player):
+        if self.delay == 27:
+            player.hit()
+            self.delay = 0
+        else:
+            self.delay = self.delay + 1
