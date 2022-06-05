@@ -1,24 +1,42 @@
 import pygame
-from objects import Tile, Kolce
+from objects import Tile, Kolce, Meta
 from player import player
 
 level_map = [
-'                               ',
-'                               ',
-'                          M    ',
-'       XXX               XX    ',
-'                               ',
-'XXX              XX         XX ',
-'                               ',
-'             XXXX              ',
-' XXXX                    XXX   ',
-'                               ',
-'                               ',
-'XXXXXXX    XXXXXXXX      XXXX  ',
-'                               ',
-'                               ',
-'    XXXXXXXXXXXXXYYYX   XX   XX',
-'    XXXXXXXXXXXXXXXXX   XXYYYXX']
+'                                        ',
+'                                        ',
+' M                                      ',
+' X       X      X      XYX              ',
+'                                        ',
+'                                 X      ',
+'                                        ',
+'                                        ',
+' XXX                     XXX            ',
+'                                        ',
+'                                        ',
+'       XX           XXXX                ',
+'                                        ',
+'                                        ',
+'XXX          X   X       X   X      X   ',
+'             XYYYX       XYYYX          ']
+
+level_map2 = [
+'                                        ',
+'                                        ',
+' M                                      ',
+' X       X      X      XYX              ',
+'                                        ',
+'                                 X      ',
+'                                        ',
+'                                        ',
+' XXX                     XXX            ',
+'                                        ',
+'                                        ',
+'       XX           XXXX                ',
+'                                        ',
+'                                        ',
+'XXX          X   X       X   X      X   ',
+'             XYYYX       XYYYX          ']
 
 tile_size = 32
 screen_width = 1200
@@ -37,6 +55,7 @@ class Level:
     def setup_level(self, layout):
         self.tiles = pygame.sprite.Group()
         self.kolce = pygame.sprite.Group()
+        self.meta = pygame.sprite.Group()
 
         for row_index, row in enumerate(layout):
             for col_index, cell in enumerate(row):
@@ -52,6 +71,11 @@ class Level:
                     kolec = Kolce((x, y), tile_size)
                     self.kolce.add(kolec)
                     kolec.draw(self.display_surface, x, y)
+
+                if cell == 'M':
+                    meta = Meta((x, y), tile_size)
+                    self.meta.add(meta)
+                    meta.draw(self.display_surface, x, y)
 
     """
     def scroll_x(self):
@@ -78,6 +102,9 @@ class Level:
                     player.rect.left = sprite.rect.right
                 elif player.left == False:
                     player.rect.right = sprite.rect.left
+        for sprite in self.meta.sprites():
+            if sprite.rect.colliderect(player.rect):
+                print("wygralem")
 
     def vertical_movement_collision(self, player):
         player.aply_gravity()
@@ -121,3 +148,25 @@ class Level:
             self.delay = 0
         else:
             self.delay = self.delay + 1
+
+"""
+    current_level_index = 0
+    game_over = 0
+    total_levels = 2
+    poziomy = [
+        level_map,
+        level_map2
+    ]
+
+    def reset_level(current_level_index):
+        # Reset player position
+        player.reset(100, screen_height - 130)
+        # Empty groups
+        # bat_group.empty()
+        # door_group.empty()
+        # Load in level data and create world)
+        return world
+
+    if current_level_index <= total_levels:
+        poziom = poziomy[current_level_index]
+"""

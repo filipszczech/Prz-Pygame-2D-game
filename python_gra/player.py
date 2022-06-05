@@ -129,7 +129,7 @@ class player(pygame.sprite.Sprite):
             self.standing = False
             self.stopax += -self.vel
 
-        elif keys[pygame.K_RIGHT] and self.x < 960 - (self.vel + self.width) and kolizja == False:
+        elif keys[pygame.K_RIGHT] and self.x < 1380 - (self.vel + self.width) and kolizja == False:
             self.x += self.vel
             self.right = True
             self.left = False

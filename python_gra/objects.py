@@ -12,9 +12,12 @@ monety_animacja = engine.Animation([
     pygame.image.load('./img/coin_5.png')
 ])
 monety = [
-    pygame.Rect(380, 400, 23, 23),
-    pygame.Rect(750, 300, 23, 23),
-    pygame.Rect(750, 400, 23, 23)
+    pygame.Rect(515, 66, 23, 23),
+    pygame.Rect(291, 66, 23, 23),
+    pygame.Rect(548, 420, 23, 23),
+    pygame.Rect(932, 420, 23, 23),
+    pygame.Rect(1156, 420, 23, 23),
+    pygame.Rect(1060, 130, 23, 23)
 ]
 
 class projectile(object):
@@ -107,6 +110,20 @@ class Kolce(pygame.sprite.Sprite):
         self.image.fill('grey')
         self.rect = self.image.get_rect(topleft = pos)
         self.img = pygame.image.load("img\lava.png")
+
+    def update(self, x_shift):
+        self.rect.x += x_shift
+
+    def draw(self, win, x, y):
+        win.blit(self.img, (x, y))
+
+class Meta(pygame.sprite.Sprite):
+    def __init__(self, pos, size):
+        super().__init__()
+        self.image = pygame.Surface((size,size))
+        self.image.fill('grey')
+        self.rect = self.image.get_rect(topleft = pos)
+        self.img = pygame.image.load("img/rabbit11.png")
 
     def update(self, x_shift):
         self.rect.x += x_shift

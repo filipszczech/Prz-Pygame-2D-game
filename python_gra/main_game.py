@@ -5,23 +5,28 @@ from enemy import enemy
 from objects import platform, button, projectile, monety, monety_animacja, shoot_enemy
 from level import Level
 
-pygame.init()
-clock = pygame.time.Clock()
 
-win = pygame.display.set_mode((960, 500))
+pygame.init()
+map_width = 1280
+
+clock = pygame.time.Clock()
+win = pygame.display.set_mode((map_width, 500))
 pygame.display.set_caption("Python - projekt")
 bg = pygame.image.load('./img/background.jpg')
 platform_img = pygame.image.load('./img/platform.png')
 plat = pygame.image.load('./img/platform_crop.png')
 font = pygame.font.SysFont('comicsans', 30, True)
+
+
+#-----muzyka---------
+pygame.mixer.init()
 bulletSound = pygame.mixer.Sound('./sound/Laser_Shoot2.wav')
-music = pygame.mixer.music.load('./sound/east.mp3')
-#moneta = pygame.image.load('./img/coin_0.png')
+#music = pygame.mixer.music.load('./sound/east.mp3')
+#pygame.mixer.music.set_volume(0.4)
 #pygame.mixer.music.play(-1)
 
+
 run = False
-
-
 
 #umieszczenie tekstury na platformie
 def platImg(x, y):
@@ -47,7 +52,6 @@ def start_run():
     pygame.display.update()
 
 
-
 #obsługa zamknięcia gry
 def quit_game():
     pygame.quit()
@@ -56,6 +60,7 @@ def quit_game():
 #odświeżanie okna aplikacji co iterację
 def redrawWindow():
     win.blit(bg, (0, 0))
+    win.blit(bg, (960, 0))
     text = font.render('Score: ' + str(player1.score), 1, (240, 0, 0))
     win.blit(text, (812, 14))
     level.run()
@@ -85,18 +90,17 @@ def redrawWindow():
 
 
     monety_animacja.update()
-
     pygame.display.update()
 
 
 #---gracz-----------------------------
-player1 = player(300, 405, 64, 64)
+player1 = player(50, 405, 64, 64)
 #--przeciwnicy------------------------
 bullets_enemy = []
 
 przeciwnicy = [
-     enemy(20, 209, 64, 64, 120, bullets_enemy, player1),
-     enemy(350, 305, 64, 64, 450, bullets_enemy, player1)
+     enemy(795, 209, 64, 64, 858, bullets_enemy, player1, True),
+     enemy(635, 305, 64, 64, 730, bullets_enemy, player1, True)
 ]
 
 
@@ -105,11 +109,11 @@ bullets = []
 start_ticks = pygame.time.get_ticks()
 outro = False
 deadscreen = False
-level = Level(win)
+level=Level(win)
 
 #---koniec gierki-------------------
 
-punkty = len(przeciwnicy) + len(monety) - 2
+punkty = len(przeciwnicy) + len(monety)
 if punkty == player1.score:
     pygame.time.wait(5000)
     outro = True
@@ -128,6 +132,7 @@ while intro:
             quit()
 
     win.blit(bg, (0, 0))
+    win.blit(bg, (960, 0))
     b1 = button("PLAY",420,170,100,50, (0, 200, 100), (0, 80, 50), intro, win, start_run)
     b2 = button("ABOUT",420,240,100,50, (130, 50, 200), (80, 50, 150), intro, win, quit)
     b3 = button("QUIT",420,310,100,50, (200, 0, 0), (130, 0, 0), intro, win, quit)
@@ -141,8 +146,6 @@ monetyZebrane = 0
 while run:
     clock.tick(27)
     seconds = (pygame.time.get_ticks() - start_ticks) / 1000
-    #print("Run: ", run)
-    #print("Monety:", monetyZebrane)
 
     #----Zbieranie monet -----
     player_rect = pygame.Rect(player1.x, player1.y, player1.width, player1.height)
@@ -184,7 +187,7 @@ while run:
                    przeciwnicy[1].hit()
                    bullets.pop(bullets.index(bullet))
 
-        if bullet.x < 960 and bullet.x > 0:
+        if bullet.x < map_width and bullet.x > 0:
                 bullet.x += bullet.vel
         else:
             bullets.pop(bullets.index(bullet))
@@ -208,6 +211,7 @@ while outro:
             pygame.quit()
             quit()
     win.blit(bg, (0, 0))
+    win.blit(bg, (960, 0))
     przeciwnicy_zabici = player1.score - monetyZebrane
     EndScore = font.render('YOUR FINAL SCORE: ' + str(player1.score), 1, (240, 0, 0))
     EndScore2 = font.render('Coins: ' + str(monetyZebrane), 1, (240, 0, 0))
@@ -232,6 +236,7 @@ while deadscreen:
             if event.key == pygame.K_c:
                 run = True
     win.blit(bg, (0, 0))
+    win.blit(bg, (960, 0))
     EndScore = font.render('YOU DIED! ', 1, (240, 0, 0))
     win.blit(EndScore, (400, 45))
     b1 = button("PLAY AGAIN", 420, 170, 100, 50, (0, 200, 100), (0, 80, 50), deadscreen, win, start_run)
