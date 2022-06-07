@@ -2,7 +2,7 @@ import pygame
 import engine
 from player import player
 from enemy import enemy
-from objects import platform, button, projectile, monety, monety_animacja, shoot_enemy
+from objects import platform, button, projectile, monety, monety_animacja, shoot_enemy, Meta
 from level import Level
 
 
@@ -51,6 +51,22 @@ def start_run():
     redrawWindow()
     pygame.display.update()
 
+def back():
+    global about
+    global intro
+    win.fill((0, 0, 0))
+    intro = True
+    about = False
+
+def about():
+    global about
+    global intro
+    win.fill((0, 0, 0))
+    intro = False
+    about = True
+
+
+
 
 #obsługa zamknięcia gry
 def quit_game():
@@ -62,7 +78,7 @@ def redrawWindow():
     win.blit(bg, (0, 0))
     win.blit(bg, (960, 0))
     text = font.render('Score: ' + str(player1.score), 1, (240, 0, 0))
-    win.blit(text, (812, 14))
+    win.blit(text, (1110, 14))
     level.run()
     player1.rect.x = player1.x
     player1.rect.y = player1.y
@@ -114,10 +130,9 @@ level=Level(win)
 #---koniec gierki-------------------
 
 punkty = len(przeciwnicy) + len(monety)
-if punkty == player1.score:
-    pygame.time.wait(5000)
-    outro = True
-    run = False
+
+
+
 #------------------------------
 
 
@@ -133,9 +148,9 @@ while intro:
 
     win.blit(bg, (0, 0))
     win.blit(bg, (960, 0))
-    b1 = button("PLAY",420,170,100,50, (0, 200, 100), (0, 80, 50), intro, win, start_run)
-    b2 = button("ABOUT",420,240,100,50, (130, 50, 200), (80, 50, 150), intro, win, quit)
-    b3 = button("QUIT",420,310,100,50, (200, 0, 0), (130, 0, 0), intro, win, quit)
+    b1 = button("PLAY",600,170,100,50, (0, 200, 100), (0, 80, 50), intro, win, start_run)
+    b2 = button("ABOUT",600,240,100,50, (130, 50, 200), (80, 50, 150), intro, win, about)
+    b3 = button("QUIT",600,310,100,50, (200, 0, 0), (130, 0, 0), intro, win, quit)
     #print("intro: ", intro)
     #print("punkty: ", punkty)
     pygame.display.update()
@@ -156,9 +171,8 @@ while run:
             monetyZebrane += 1
     #-----------------------
 
-    if punkty == player1.score:
-        outro = True
-        run = False
+
+
 
     if player1.health == 0:
         deadscreen = True
@@ -191,7 +205,10 @@ while run:
                 bullet.x += bullet.vel
         else:
             bullets.pop(bullets.index(bullet))
-
+    on_meta = level.horizontal_movement_collision(player1)
+    if punkty == player1.score and on_meta:
+        outro = True
+        run = False
 
     keys = pygame.key.get_pressed()
     player1.move(keys, bullets, win, projectile, kolizja, bulletSound)  #obsługa klawiszy
@@ -213,21 +230,19 @@ while outro:
     win.blit(bg, (0, 0))
     win.blit(bg, (960, 0))
     przeciwnicy_zabici = player1.score - monetyZebrane
-    EndScore = font.render('YOUR FINAL SCORE: ' + str(player1.score), 1, (240, 0, 0))
-    EndScore2 = font.render('Coins: ' + str(monetyZebrane), 1, (240, 0, 0))
-    EndScore3 = font.render('Enemies: ' + str(przeciwnicy_zabici), 1, (240, 0, 0))
-    win.blit(EndScore, (300, 14))
-    win.blit(EndScore2, (400, 50))
-    win.blit(EndScore3, (400, 90))
-    b1 = button("PLAY AGAIN", 420, 170, 100, 50, (0, 200, 100), (0, 80, 50), outro, win, start_run)
-    b2 = button("NEXT LEVEL",420,240,100,50, (130, 50, 200), (80, 50, 150), outro, win, quit)
-    b3 = button("QUIT",420,310,100,50, (200, 0, 0), (130, 0, 0), outro, win, quit)
+    EndScore = font.render('YOUR FINAL SCORE: ' + str(player1.score), 1, (163, 114, 98))
+    EndScore2 = font.render('Coins: ' + str(monetyZebrane), 1, (163, 114, 98))
+    EndScore3 = font.render('Enemies: ' + str(przeciwnicy_zabici), 1, (163, 114, 98))
+    win.blit(EndScore, (475, 34))
+    win.blit(EndScore2, (600, 70))
+    win.blit(EndScore3, (575, 110))
+    b1 = button("PLAY AGAIN",600,215, 100, 50, (0, 200, 100), (0, 80, 50), outro, win, start_run)
+    b3 = button("QUIT",525,310,240,50, (200, 0, 0), (130, 0, 0), outro, win, quit)
     pygame.display.update()
     clock.tick(27)
 
 
 while deadscreen:
-    print("Run:", run)
     for event in pygame.event.get():
         # print(event)
         if event.type == pygame.KEYDOWN:
@@ -238,9 +253,29 @@ while deadscreen:
     win.blit(bg, (0, 0))
     win.blit(bg, (960, 0))
     EndScore = font.render('YOU DIED! ', 1, (240, 0, 0))
-    win.blit(EndScore, (400, 45))
-    b1 = button("PLAY AGAIN", 420, 170, 100, 50, (0, 200, 100), (0, 80, 50), deadscreen, win, start_run)
-    b3 = button("QUIT",420,310,100,50, (200, 0, 0), (130, 0, 0), deadscreen, win, quit)
+    win.blit(EndScore, (575, 45))
+    b1 = button("PLAY AGAIN", 600, 170, 100, 50, (0, 200, 100), (0, 80, 50), deadscreen, win, start_run)
+    b3 = button("QUIT",600,310,100,50, (200, 0, 0), (130, 0, 0), deadscreen, win, quit)
+    pygame.display.update()
+    clock.tick(27)
+
+while about:
+    for event in pygame.event.get():
+        # print(event)
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            quit()
+    win.blit(bg, (0, 0))
+    win.blit(bg, (960, 0))
+    EndScore = font.render('GRA STWORZONA NA POTRZEBY PROJEKTU Z PRZEDMIOTU', 1, (163, 114, 98))
+    EndScore2 = font.render('PROGRAMOWANIE W PYTHON', 1, (163, 114, 98))
+    EndScore3 = font.render('AUTORZY: FILIP SZCZĘCH', 1, (163, 114, 98))
+    EndScore4 = font.render('MACIEJ WRÓBEL', 1, (163, 114, 98))
+    win.blit(EndScore, (150, 45))
+    win.blit(EndScore2, (400, 85))
+    win.blit(EndScore3, (400, 160))
+    win.blit(EndScore4, (570, 200))
+    b3 = button("QUIT",600,310,100,50, (200, 0, 0), (130, 0, 0), about, win, quit)
     pygame.display.update()
     clock.tick(27)
 

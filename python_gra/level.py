@@ -4,8 +4,8 @@ from player import player
 
 level_map = [
 '                                        ',
-'                                        ',
 ' M                                      ',
+'                                        ',
 ' X       X      X      XYX              ',
 '                                        ',
 '                                 X      ',
@@ -22,8 +22,8 @@ level_map = [
 
 level_map2 = [
 '                                        ',
-'                                        ',
 ' M                                      ',
+'                                        ',
 ' X       X      X      XYX              ',
 '                                        ',
 '                                 X      ',
@@ -105,6 +105,7 @@ class Level:
         for sprite in self.meta.sprites():
             if sprite.rect.colliderect(player.rect):
                 print("wygralem")
+                return True
 
     def vertical_movement_collision(self, player):
         player.aply_gravity()
@@ -141,6 +142,9 @@ class Level:
             kolec.draw(self.display_surface, kolec.rect.x, kolec.rect.y)
         pygame.display.update()
 
+
+        for meta in self.meta:
+            meta.draw(self.display_surface, meta.rect.x, meta.rect.y)
     #obrażenia od lawy
     def hit(self, player):
         if self.delay == 27:

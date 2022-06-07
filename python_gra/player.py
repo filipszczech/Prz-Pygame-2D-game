@@ -71,7 +71,6 @@ class player(pygame.sprite.Sprite):
         #pygame.draw.rect(win, (255, 0, 0), self.hitbox, 2)
 
     def hit(self):
-        print('hit')
         if self.health >= 1:
             self.health -= 1
             self.heart_list.pop()

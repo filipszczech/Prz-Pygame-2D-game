@@ -51,7 +51,7 @@ class platform(object):
         pygame.draw.rect(win, self.color, self.space)
 
 def text_objects(text, font):
-    textSurface = font.render(text, True, (0, 0, 0))
+    textSurface = font.render(text, True, (163, 114, 98))
     return textSurface, textSurface.get_rect()
 
 #tworzenie przycisku
@@ -62,7 +62,6 @@ def button(msg, x, y, w, h, ic, ac, intro, win, action = None):
     if x+w > mouse[0] > x and y+h > mouse[1] > y and intro == True:
         pygame.draw.rect(bg, ac, (x, y, w, h))
         if click[0] == 1 and action != None:
-            print("klik")
             action()
     else:
         if intro == True:
@@ -123,7 +122,7 @@ class Meta(pygame.sprite.Sprite):
         self.image = pygame.Surface((size,size))
         self.image.fill('grey')
         self.rect = self.image.get_rect(topleft = pos)
-        self.img = pygame.image.load("img/rabbit11.png")
+        self.img = pygame.image.load("img\meta3.png")
 
     def update(self, x_shift):
         self.rect.x += x_shift
